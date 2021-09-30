@@ -2,9 +2,13 @@ from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import NoSuchElementException
 import time
 import csv
 import pandas as pd
+import numpy as np
 
 
 
@@ -68,7 +72,8 @@ rows_list = []
 data_rows=[]
 
 
-test_link="https://portal.siges.sv/pp/sede?sede=2083"
+#test_link="https://portal.siges.sv/pp/sede?sede=2083"
+test_link="https://portal.siges.sv/pp/sede?sede=1874"
 browser.get(test_link)
 browser.implicitly_wait(10)
 
@@ -109,21 +114,55 @@ for i in range(df.shape[0]):
     students = list(students.values.flatten())
     grade=df.loc[i,"Nombre grado"]
     grade_number = grades.get(grade)
-    var_name = "students_grade" + grade_number
+    var_name = "students_grade_" + grade_number
     dict[var_name] = students
+
+# this function tries to click on element, if it is not clickable yet, it waits one more second
+def click_elem(elem):
+    try:
+        time.sleep(0.2)
+        elem.click()
+    except WebDriverException:
+        time.sleep(1)
+        elem.click()
+
+# this function tries to find an element (default by xpath, if by_class is set to true, then by class name)
+# if it finds it the function returns 1, otherwise 0
+def elem_exists(parent,elem_string,by_class=False):
+    browser.implicitly_wait(0)
+    try:
+        if by_class:
+            parent.find_element_by_class_name(elem_string)
+            return True
+        else :
+            parent.find_element_by_xpath(elem_string)
+            return True
+    except NoSuchElementException:
+        return False
+    finally:
+        browser.implicitly_wait(10)
 
 
 cont=True
 
 while cont:
-    time.sleep(1)
+    time.sleep(0.8)
     arrow=browser.find_element_by_xpath('//*[@id="form:j_idt132"]/ul')
-    arrows=arrow.find_elements_by_class_name("ui-icon-triangle-1-e")
-    ## this takes a long time!
-    if len(arrows)<=0:
+    ## this takes a long time if arrows is empty!
+    print("before statement: ")
+    print(time.time())
+    if elem_exists(arrow,"ui-icon-triangle-1-e",by_class=True)==0:
+        print("before break statement: ")
+        print(time.time())
         cont= False
         break
-    [arrow.click() for arrow in arrows]
+    print("after statement: " )
+    print(time.time())
+    arrows=arrow.find_elements_by_class_name("ui-icon-triangle-1-e")
+    [click_elem(arrow) for arrow in arrows]
+
+print("after break statement: " )
+print(time.time())
 
 
 class_codes=["0_0_0_0_0_0","0_0_0_0_0_1","0_0_0_0_0_2","0_1_0_0_0_0","0_1_0_0_0_1","0_1_0_0_0_2"
@@ -136,17 +175,17 @@ part2= '"]/span/span[3]'
 
 ## iterate through all the grades
 for i in range(len(class_codes)):
+
     # construct xpath to grade
     xpath=part1+class_codes[i]+part2
     #check if grade exists
-    if len(browser.find_elements_by_xpath(xpath))>0 :
+    if elem_exists(browser,xpath) :
         # find grade elem and click on it
         grade= browser.find_element_by_xpath(xpath)
         grade_text=grade.text
         grade_code=grades.get(grade_text)
-        time.sleep(0.5)
-        grade.click()
-        time.sleep(0.5)
+        time.sleep(0.6)
+        click_elem(grade)
 
         graph=browser.find_element_by_tag_name('svg')
         if graph.get_attribute("height")== None:
@@ -174,6 +213,9 @@ for i in range(len(class_codes)):
         for col in data.columns.values:
             # construct var name
             var_name= col+"_"+grade_code
+            # if mean is 0, that means test was not taken-> set to na
+            if data[col][0]=="0":
+                data[col][0]=np.nan
             # save the value of the first (only) row per column
             dict[var_name]=data[col][0]
 
