@@ -136,6 +136,7 @@ for link in school_links:
         var_name = "students_grade_" + grade_number
         school_dict[var_name] = students
 
+    print("school data successful")
 
     # this function tries to find an element (default by xpath, if by_class is set to true, then by class name)
     # if it finds it the function returns 1, otherwise 0
@@ -172,7 +173,7 @@ for link in school_links:
             parent_edu_reg = browser.find_element_by_xpath("//span[contains(text(), 'Educación Regular')]/parent::span/parent::li")
             arrows = parent_edu_reg.find_elements_by_class_name("ui-icon-triangle-1-e")
             [click_elem(arrow) for arrow in arrows]
-
+    print("menu succesfully opened")
 
     class_codes = ["_0_0_0_0_0", "_0_0_0_0_1", "_0_0_0_0_2", "_1_0_0_0_0", "_1_0_0_0_1", "_1_0_0_0_2"
         , "_1_1_0_0_0", "_1_1_0_0_1", "_1_1_0_0_2", "_1_2_0_0_0", "_1_2_0_0_1", "_1_2_0_0_2"]
@@ -192,6 +193,7 @@ for link in school_links:
             grade_text = grade.text
             grade_code = grades.get(grade_text)
             click_elem(grade)
+            print("clicked on grade")
             browser.implicitly_wait(2) #CHANGED HERE
             graph = browser.find_element_by_tag_name('svg')
             # if element does not contain any g elements, then it is empty-> continue
@@ -221,7 +223,7 @@ for link in school_links:
 
             data = pd.DataFrame([[el[0] for el in subject_list]], columns=[el[1] for el in subject_list])
             data = data.rename(columns=subject_names)
-
+            print("test scores added")
             for col in data.columns.values:
                 # construct var name
                 var_name = col + "_" + grade_code
