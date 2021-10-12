@@ -55,14 +55,18 @@ number_of_pages = 51
 
 # iterate through pages and append links
 for page in range(1, number_of_pages + 1):
-    pager = browser.find_element_by_xpath("//*[@id='form:basicDT_paginator_bottom']/span[2]")
-    # pages = pager.find_elements_by_tag_name("a")
-    page_string = str(page)
-    page_elem = pager.find_element_by_xpath("//a[contains(text(), '" + page_string + "')]")
-    # pages[page].click()
     try:
+        pager = browser.find_element_by_xpath("//*[@id='form:basicDT_paginator_bottom']/span[2]")
+        # pages = pager.find_elements_by_tag_name("a")
+        page_string = str(page)
+        page_elem = pager.find_element_by_xpath("//a[contains(text(), '" + page_string + "')]")
+        # pages[page].click()
         click_elem(page_elem)
     except StaleElementReferenceException:
+        time.sleep(1)
+        pager = browser.find_element_by_xpath("//*[@id='form:basicDT_paginator_bottom']/span[2]")
+        # pages = pager.find_elements_by_tag_name("a")
+        page_string = str(page)
         page_elem = pager.find_element_by_xpath("//a[contains(text(), '" + page_string + "')]")
         click_elem(page_elem)
     page_links = get_school_links()
@@ -78,20 +82,20 @@ for link in school_links:
     #test_link="https://portal.siges.sv/pp/sede?sede=396"
     browser.get(link)
     start_time = time.time()
-    dict = {}
+    school_dict = {}
 
     # school info
-    dict["code"] = browser.find_element_by_xpath('//*[@id="form:input_codigo"]').text
-    dict["address"] = browser.find_element_by_xpath('//*[@id="form:j_idt31"]/div[5]').text
-    regex = re.findall(",[^,]*,[^,]*\.$", dict["address"])[0]
-    dict["department"] = re.findall(",[^,]*\.$", regex)[0][2:-1]
-    dict["municipality"] = re.findall(",[^,]*,", regex)[0][2:-1]
-    dict["website"] = browser.find_element_by_xpath('//*[@id="form:j_idt31"]/div[3]/a').get_attribute("href")
-    dict["name"] = browser.find_element_by_xpath('//*[@id="form:input_nombre"]').text
-    dict["type"] = browser.find_element_by_xpath('//*[@id="form:output_tipo_sede"]').text
-    dict["tel"] = browser.find_element_by_xpath('//*[@id="form:input_telefono"]').text
-    dict["shift"] = browser.find_element_by_xpath('//*[@id="form:opt_jornada"]').text
-    dict["email"] = browser.find_element_by_xpath('//*[@id="form:j_idt31"]/div[10]/a').text
+    school_dict["code"] = browser.find_element_by_xpath('//*[@id="form:input_codigo"]').text
+    school_dict["address"] = browser.find_element_by_xpath('//*[@id="form:j_idt31"]/div[5]').text
+    regex = re.findall(",[^,]*,[^,]*\.$", school_dict["address"])[0]
+    school_dict["department"] = re.findall(",[^,]*\.$", regex)[0][2:-1]
+    school_dict["municipality"] = re.findall(",[^,]*,", regex)[0][2:-1]
+    school_dict["website"] = browser.find_element_by_xpath('//*[@id="form:j_idt31"]/div[3]/a').get_attribute("href")
+    school_dict["name"] = browser.find_element_by_xpath('//*[@id="form:input_nombre"]').text
+    school_dict["type"] = browser.find_element_by_xpath('//*[@id="form:output_tipo_sede"]').text
+    school_dict["tel"] = browser.find_element_by_xpath('//*[@id="form:input_telefono"]').text
+    school_dict["shift"] = browser.find_element_by_xpath('//*[@id="form:opt_jornada"]').text
+    school_dict["email"] = browser.find_element_by_xpath('//*[@id="form:j_idt31"]/div[10]/a').text
 
     # sel_grade=Select(browser.find_element_by_xpath("//*[@id='form:b_nivel']"))
     # sel_grade.select_by_visible_text("Educación Básica")
@@ -126,7 +130,7 @@ for link in school_links:
         grade = df.loc[i, "Nombre grado"]
         grade_number = grades.get(grade)
         var_name = "students_grade_" + grade_number
-        dict[var_name] = students
+        school_dict[var_name] = students
 
 
     # this function tries to find an element (default by xpath, if by_class is set to true, then by class name)
@@ -160,16 +164,16 @@ for link in school_links:
             arrows = parent_edu_reg.find_elements_by_class_name("ui-icon-triangle-1-e")
             [click_elem(arrow) for arrow in arrows]
         except StaleElementReferenceException or ElementNotVisibleException:
-            time.sleep(0.4)
+            time.sleep(1)
             parent_edu_reg = browser.find_element_by_xpath("//span[contains(text(), 'Educación Regular')]/parent::span/parent::li")
             arrows = parent_edu_reg.find_elements_by_class_name("ui-icon-triangle-1-e")
             [click_elem(arrow) for arrow in arrows]
 
-
+    print("check1")
     class_codes = ["_0_0_0_0_0", "_0_0_0_0_1", "_0_0_0_0_2", "_1_0_0_0_0", "_1_0_0_0_1", "_1_0_0_0_2"
         , "_1_1_0_0_0", "_1_1_0_0_1", "_1_1_0_0_2", "_1_2_0_0_0", "_1_2_0_0_1", "_1_2_0_0_2"]
 
-    part1 = parent_edu_reg_li
+    part1 = '//*[@id="'+ parent_edu_reg_li
     part2 = '"]/span/span[3]'
 
     ## iterate through all the grades
@@ -183,7 +187,12 @@ for link in school_links:
             grade = browser.find_element_by_xpath(xpath)
             grade_text = grade.text
             grade_code = grades.get(grade_text)
-            click_elem(grade)
+            print("check2")
+            try:
+                click_elem(grade)
+            except StaleElementReferenceException:
+                grade = browser.find_element_by_xpath(xpath)
+                grade_code = grades.get(grade_text)
             graph = browser.find_element_by_tag_name('svg')
             # if element does not contain any g elements, then it is empty-> continue
             if elem_exists(graph, "p", by_class=True) == False:
@@ -197,7 +206,7 @@ for link in school_links:
             subject_elems = subject_elems[:-4 or None]
             ## keep only every other element, starting from the firs
             subject_elems = subject_elems[::2 or None]
-
+            print("check3")
             # get nested list of subjects (number and subject)
             subject_list = [sub.find_elements_by_tag_name("text") for sub in subject_elems]
             for i in range(len(subject_list)):
@@ -220,9 +229,9 @@ for link in school_links:
                 if data[col][0] == "0":
                     data[col][0] = np.nan
                 # save the value of the first (only) row per column
-                dict[var_name] = data[col][0]
+                school_dict[var_name] = data[col][0]
 
-    data_rows.append(dict)
+    data_rows.append(school_dict)
     count=count+1
     print("School "+str(count)+" out of 5024 -> aprox. "+str(round(count/5024*100,2))+" % done")
 
