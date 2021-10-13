@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d8099e18-c9f7-414e-9767-cf59ce75dcee" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/scrape_mined.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/scrape_mined.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -34,8 +33,8 @@
       <file leaf-file-name="scrape_mined.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/venv/scrape_mined.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="236" lean-forward="true" selection-start-line="236" selection-end-line="236" />
+            <state relative-caret-position="219">
+              <caret line="174" lean-forward="true" selection-start-line="174" selection-end-line="174" />
               <folding>
                 <element signature="e#0#30#0" expanded="true" />
               </folding>
@@ -76,9 +75,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="266" />
+    <option name="x" value="76" />
     <option name="y" value="23" />
-    <option name="width" value="1014" />
+    <option name="width" value="1204" />
     <option name="height" value="728" />
   </component>
   <component name="ProjectView">
@@ -172,7 +171,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="266" y="23" width="1014" height="728" extended-state="0" />
+    <frame x="76" y="23" width="1204" height="728" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3296355" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -181,7 +181,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3296355" />
       <window_info anchor="bottom" id="Python Console" order="7" weight="0.47226626" />
       <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.3296355" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21399178" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17900172" />
       <window_info anchor="right" id="R Packages" order="3" weight="0.3292683" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="R Graphics" order="3" />
@@ -349,8 +349,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/venv/scrape_mined.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="236" lean-forward="true" selection-start-line="236" selection-end-line="236" />
+        <state relative-caret-position="219">
+          <caret line="174" lean-forward="true" selection-start-line="174" selection-end-line="174" />
           <folding>
             <element signature="e#0#30#0" expanded="true" />
           </folding>
