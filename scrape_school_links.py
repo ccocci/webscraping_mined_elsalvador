@@ -69,4 +69,4 @@ for page in range(1, number_of_pages + 1):
     page_links = get_school_links()
     school_links.extend(page_links)
 
-np.savetxt("school_links.csv", school_links, delimiter=",", fmt='%s')
+np.savetxt("temp/school_links.csv", school_links, delimiter=",", fmt='%s')

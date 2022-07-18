@@ -86,7 +86,7 @@ def elem_exists(parent, elem_string, by_class=False, by_tag_name=False):
         browser.implicitly_wait(2)
 
 # get school links from csv
-school_links=pd. read_csv("school_links.csv")
+school_links=pd. read_csv("temp/school_links.csv")
 school_links=school_links.iloc[:,0].to_list()
 
 
@@ -292,7 +292,7 @@ for link in school_links:
 
 data = pd.DataFrame(data_rows)
 
-data.to_csv(r"webscraping_mined.csv",index=False)
+data.to_csv(r"out/webscraping_mined.csv",index=False)
 
 
 
